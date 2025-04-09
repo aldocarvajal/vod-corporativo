@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Plataforma VOD Corporativa</title>
+</head>
+<body>
+  <h1>Bienvenido a la Plataforma VOD</h1>
+  <p>Este contenido está protegido. Inicia sesión para continuar.</p>
+
+  <form onsubmit="event.preventDefault(); verificarLogin();">
+    <input type="text" id="usuario" placeholder="Usuario" required>
+    <input type="password" id="contrasena" placeholder="Contraseña" required>
+    <button type="submit">Ingresar</button>
+  </form>
+
+  <div id="contenido" style="display:none;">
+    <h2>Contenido VOD</h2>
+    <video width="320" height="240" controls>
+      <source src="video1.mp4" type="video/mp4">
+      Tu navegador no soporta videos.
+    </video>
+  </div>
+
+  <script>
+    function verificarLogin() {
+      const user = document.getElementById('usuario').value;
+      const pass = document.getElementById('contrasena').value;
+      
+      if (user === 'empleado' && pass === '1234') {
+        alert('Bienvenido');
+        document.querySelector('form').style.display = 'none';
+        document.getElementById('contenido').style.display = 'block';
+      } else {
+        alert('Credenciales incorrectas');
+      }
+    }
+  </script>
+</body>
+</html>
