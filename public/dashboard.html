@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Plataforma VOD Corporativa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button onclick="logout()" style="position: absolute; top: 20px; right: 20px;">Cerrar sesión</button>
+
+  <div class="dashboard">
+    <h1>🎬 Bienvenido a la Plataforma VOD Corporativa</h1>
+    <p id="welcome-text">Accede a los contenidos de entrenamiento y eventos internos.</p>
+
+    <div class="video-grid">
+      <!-- Video Cards -->
+      <div class="video-card" id="video1">
+        <video controls width="300" id="video1Element">
+          <source src="PRESIDENTE-MADURO-EXIGIO-A-EEUU-DETENER-LA-PERSECUSION-A-MIGRANTES-VENEZOLANOS.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+        <p>Maduro exige a EE.UU. detener la persecución</p>
+      </div>
+
+      <div class="video-card" id="video2">
+        <video controls width="300" id="video2Element">
+          <source src="CABELLO-OPOSITORES-EN-EMBAJADA-ARGENTINA.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+        <p>Cabello denuncia a opositores en la embajada de Argentina</p>
+      </div>
+
+      <div class="video-card" id="video3">
+        <video controls width="300" id="video3Element">
+          <source src="MIGRANTES-VENEZOLANOS-SECUESTRADOS-SON-TRATADOS-PEOR-QUE-LOS-NAZIS.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+        <p>Migrantes venezolanos secuestrados, peores que los nazis</p>
+      </div>
+
+      <div class="video-card" id="video4">
+        <video controls width="300" id="video4Element">
+          <source src="SAQUE-SUS-NARICES-DE-ESTA-CONTROVERSIA.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+        <p>Saque sus narices de esta controversia</p>
+      </div>
+
+      <div class="video-card" id="video5">
+        <video controls width="300" id="video5Element">
+          <source src="SHEINBAUM-REPUDIA-SANCIONES-ECONOMICAS.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+        <p>Sheinbaum repudia las sanciones económicas</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const user = localStorage.getItem("userLogged");
+    const name = localStorage.getItem("userFullName");
+
+    if (!user) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("welcome-text").innerText = `Hola ${name}, aquí podrás visualizar videos informativos para estar al tanto de los acontecimientos más recientes.`;
+
+    // Evento de captura de tiempo de visualización
+    const videos = document.querySelectorAll("video");
+    videos.forEach(video => {
+      video.addEventListener("ended", () => {
+        const videoId = video.id;
+        const timeWatched = video.currentTime;
+        logVideoData(videoId, timeWatched);
+      });
+
+      video.addEventListener("pause", () => {
+        const videoId = video.id;
+        const timeWatched = video.currentTime;
+        logVideoData(videoId, timeWatched);
+      });
+    });
+
+    // Función para registrar los datos del video en el servidor
+    function logVideoData(videoId, timeWatched) {
+      const data = {
+        user: user,
+        videoId: videoId,
+        timeWatched: timeWatched
+      };
+
+      // Enviar los datos al servidor (a un archivo Excel o base de datos)
+      fetch('/log-video', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => console.log('Datos guardados correctamente', data))
+      .catch((error) => console.error('Error:', error));
+    }
+
+    function logout() {
+      localStorage.removeItem("userLogged");
+      localStorage.removeItem("userFullName");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
+
